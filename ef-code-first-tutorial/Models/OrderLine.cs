@@ -15,7 +15,7 @@ namespace ef_code_first_tutorial.Models {
         //FK's
         public int OrderId { get; set; }
         public virtual Order Order { get; set; } = null!;//property that allows us to see associated Order
-        public int ItemID { get; set; }
+        public int ItemId { get; set; }
         public virtual Item Item { get; set; } = null!;
 
         //Contructors

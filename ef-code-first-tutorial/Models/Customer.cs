@@ -20,11 +20,15 @@ namespace ef_code_first_tutorial.Models {
         //[Required] new C# now defaults to non-nullable aka required so this isn't needed anymore
         public string StateCode { get; set; } = "OH"; //OH will be default value if not set manually
         [Column(TypeName = "decimal(9,2)")]
-        public decimal Sales { get; set; }
+        public decimal Sales { get; set; }      
         public bool Active { get; set; } = true;
+
+        public virtual ICollection<Order> Orders { get; set; }
+
 
         //default constructor
         public Customer() { }
+
 
 
 

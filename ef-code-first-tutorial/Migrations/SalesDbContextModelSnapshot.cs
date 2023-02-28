@@ -113,7 +113,7 @@ namespace ef_code_first_tutorial.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ItemID")
+                    b.Property<int>("ItemId")
                         .HasColumnType("int");
 
                     b.Property<int>("OrderId")
@@ -124,7 +124,7 @@ namespace ef_code_first_tutorial.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemID");
+                    b.HasIndex("ItemId");
 
                     b.HasIndex("OrderId");
 
@@ -134,7 +134,7 @@ namespace ef_code_first_tutorial.Migrations
             modelBuilder.Entity("ef_code_first_tutorial.Models.Order", b =>
                 {
                     b.HasOne("ef_code_first_tutorial.Models.Customer", "Customer")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("CustomerId");
 
                     b.Navigation("Customer");
@@ -144,12 +144,12 @@ namespace ef_code_first_tutorial.Migrations
                 {
                     b.HasOne("ef_code_first_tutorial.Models.Item", "Item")
                         .WithMany()
-                        .HasForeignKey("ItemID")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ef_code_first_tutorial.Models.Order", "Order")
-                        .WithMany()
+                        .WithMany("OrderLines")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -157,6 +157,16 @@ namespace ef_code_first_tutorial.Migrations
                     b.Navigation("Item");
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("ef_code_first_tutorial.Models.Customer", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("ef_code_first_tutorial.Models.Order", b =>
+                {
+                    b.Navigation("OrderLines");
                 });
 #pragma warning restore 612, 618
         }
