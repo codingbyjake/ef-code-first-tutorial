@@ -26,6 +26,15 @@ namespace ef_code_first_tutorial.Controllers {
                                     .FindAsync(id);
         }
 
+        public async Task<Customer?> GetCustomerWithOrders(int id) {
+            return await _context.Customers
+                                    .Include(o => o.Orders)
+                                        .ThenInclude(ol => ol.OrderLines)
+                                            .ThenInclude(i => i.Item)
+                                    .SingleOrDefaultAsync(c => c.Id == id);
+        }
+
+
         public async Task<Customer> InsertCustomer(Customer cust) {
             _context.Customers.Add(cust);
             var changes = await _context.SaveChangesAsync();
@@ -33,9 +42,30 @@ namespace ef_code_first_tutorial.Controllers {
                 throw new Exception("Insert Failed!");
             }
             return cust;
-
         }
 
+        public async Task UpdateCustomer(int id, Customer cust) {
+            if(id != cust.Id) {
+                throw new Exception("Customer and Customer ID don't match!");
+            }
+            _context.Entry(cust).State = EntityState.Modified;
+            var changes = await _context.SaveChangesAsync();
+            if(changes != 1) {
+                throw new Exception("Update failed!");
+            }
+        }
 
+        public async Task DeleteCustomer(int id) {
+            var cust = await GetCustomer(id);
+            if (cust is null) {
+                throw new Exception("Not found!");
+            }
+            _context.Customers.Remove(cust);
+            var changes = await _context.SaveChangesAsync();
+            if (changes != 1) {
+                throw new Exception("Delete failed!");
+            }
+
+        }
     }//ends class
 }

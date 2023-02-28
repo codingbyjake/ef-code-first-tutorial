@@ -1,27 +1,48 @@
 ﻿
 using ef_code_first_tutorial;
+using ef_code_first_tutorial.Controllers;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Channels;
 
 
-//********get by customer
-var _context = new SalesDbContext();
 
-var customer = _context.Customers.Include(x => x.Orders)
-    .ThenInclude(x => x.OrderLines)
-    .ThenInclude(x => x.Item)
-    .Single(x => x.Id == 1);
 
-Console.WriteLine($"CUSTOMER: {customer.Name}");
+//********using CustomersController to get all Orders,
+//********OrderLines and Items for Customer by Customer ID
+var custCtrl = new CustomersController();
+
+var customer = await custCtrl.GetCustomerWithOrders(1);
+
+Console.WriteLine($"CUSTOMER: {customer!.Name}");
 foreach (var ord in customer.Orders) {
     Console.WriteLine($"ORDER: DESCRIPTION: {ord.Description}");
-    foreach(var ol in ord.OrderLines) {
+    foreach (var ol in ord.OrderLines) {
         Console.WriteLine($"ORDERLINE: Product: {ol.Item.Name}, " +
                              $"Quantity: {ol.Quantity}," +
                              $" Price: {ol.Item.Price:C}, " +
                              $"Line total: {ol.Quantity * ol.Item.Price:C}");
     }
 }
+
+//********get by customer
+//    var _context = new SalesDbContext();
+
+//var customer = _context.Customers.Include(x => x.Orders)
+//    .ThenInclude(x => x.OrderLines)
+//    .ThenInclude(x => x.Item)
+//    .Single(x => x.Id == 1);
+
+//Console.WriteLine($"CUSTOMER: {customer.Name}");
+//foreach (var ord in customer.Orders) {
+//    Console.WriteLine($"ORDER: DESCRIPTION: {ord.Description}");
+//    foreach(var ol in ord.OrderLines) {
+//        Console.WriteLine($"ORDERLINE: Product: {ol.Item.Name}, " +
+//                             $"Quantity: {ol.Quantity}," +
+//                             $" Price: {ol.Item.Price:C}, " +
+//                             $"Line total: {ol.Quantity * ol.Item.Price:C}");
+//    }
+//   // var orderTotal = ord.OrderLines.Sum(ol)
+//}
 
 
 
